@@ -1,0 +1,764 @@
+swagger: "2.0"
+info:
+  description: "Сервисы"
+  version: "0.0.1"
+  title: "Services"
+tags:
+  - name: "driver"
+    description: "Водители"
+  - name: "car"
+    description: "Автомобили"
+  - name: "detail"
+    description: "Детали"
+schemes:
+  - "http"
+paths:
+  /driver/create:
+    post:
+      operationId: driver_create
+      tags:
+        - "driver"
+      summary: "Создание водителя"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            $ref: '#/definitions/DriverSwagger'
+      responses:
+        201:
+          description: "Водитель успешно создан"
+        304:
+          description: "Водитель не создан: проверьте корректность заполнения полей"
+        500:
+          description: "Ошибка сервера"
+  /driver/update/id={id}:
+    post:
+      operationId: driver_update
+      tags:
+        - "driver"
+      summary: "Изменение водителя"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            $ref: '#/definitions/DriverSwagger'
+        - name: "id"
+          in: "path"
+          required: true
+          type: "integer"
+          format: "int32"
+      responses:
+        200:
+          description: "Водитель успешно изменен"
+        304:
+          description: "Водитель не изменен"
+        500:
+          description: "Ошибка сервера"
+  /driver/addBalance:
+    post:
+      operationId: driver_add_balance
+      tags:
+        - "driver"
+      summary: "Начисление баланса"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            $ref: '#/definitions/BalanceToDriverSwagger'
+      responses:
+        200:
+          description: "Баланс успешно начислен"
+        304:
+          description: "Баланс не начислен"
+        500:
+          description: "Ошибка сервера"
+  /driver/deleteBalance:
+    post:
+      operationId: driver_delete_balance
+      tags:
+        - "driver"
+      summary: "Списание баланса"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            $ref: '#/definitions/BalanceToDriverSwagger'
+      responses:
+        200:
+          description: "Баланс успешно списан"
+        304:
+          description: "Баланс не списан"
+        500:
+          description: "Ошибка сервера"
+  /driver/getById/id={id}:
+    get:
+      operationId: driver_get_by_id
+      tags:
+        - "driver"
+      summary: "Получение водителя по id"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          type: "integer"
+          format: "int32"
+      responses:
+        200:
+          description: "Найденный водитель"
+          schema:
+            $ref: '#/definitions/DriverForGettingSwagger'
+        404:
+          description: "Водитель не найден"
+        500:
+          description: "Ошибка сервера"
+  /driver/getByName/name={name}:
+    get:
+      operationId: driver_get_by_name
+      tags:
+        - "driver"
+      summary: "Получение водителей по ФИО"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "name"
+          in: "path"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Найденные водители"
+          schema:
+            type: "array"
+            items:
+              $ref: '#/definitions/DriverForGettingSwagger'
+        404:
+          description: "Водители не найдены"
+        500:
+          description: "Ошибка сервера"
+  /driver/getByPassport/passport={passport}:
+    get:
+      operationId: driver_get_by_passport
+      tags:
+        - "driver"
+      summary: "Получение водителей по паспорту"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "passport"
+          in: "path"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Найденные водители"
+          schema:
+            type: "array"
+            items:
+              $ref: '#/definitions/DriverForGettingSwagger'
+        404:
+          description: "Водители не найдены"
+        500:
+          description: "Ошибка сервера"
+  /driver/getAll:
+    get:
+      operationId: driver_get_all
+      tags:
+        - "driver"
+      summary: "Получение всех водителей"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "Найденные водители"
+          schema:
+            type: "array"
+            items:
+              $ref: '#/definitions/DriverForGettingSwagger'
+        404:
+          description: "Водители не найдены"
+        500:
+          description: "Ошибка сервера"
+  /driver/getAllWithLimitAndOffset/limit={limit}&offset={offset}:
+    get:
+      operationId: driver_get_all_with_limit_and_offset
+      tags:
+        - "driver"
+      summary: "Получение всех водителей (лимит и сдвиг)"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "limit"
+          in: "path"
+          required: true
+          type: "integer"
+          format: "int32"
+        - name: "offset"
+          in: "path"
+          required: true
+          type: "integer"
+          format: "int32"
+      responses:
+        200:
+          description: "Найденные водители"
+          schema:
+            type: "array"
+            items:
+              $ref: '#/definitions/DriverForGettingSwagger'
+        404:
+          description: "Водители не найдены"
+        500:
+          description: "Ошибка сервера"
+  /driver/getBalance/driverId={driverId}&currencyId={currencyId}:
+    get:
+      operationId: driver_get_balance
+      tags:
+        - "driver"
+      summary: "Получение баланса"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "driverId"
+          in: "path"
+          required: true
+          type: "integer"
+          format: "int32"
+        - name: "currencyId"
+          in: "path"
+          required: true
+          type: "integer"
+          format: "int32"
+      responses:
+        200:
+          description: "Найденный водитель"
+          schema:
+            $ref: '#/definitions/BalanceSwagger'
+        404:
+          description: "Водитель не найден"
+        500:
+          description: "Ошибка сервера"
+  /driver/getBirthdayBoys:
+    get:
+      operationId: driver_get_birthday_boys
+      tags:
+        - "driver"
+      summary: "Получение списка именинников"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "Выполнено (см. консоль)"
+        500:
+          description: "Ошибка сервера"
+  /car/create:
+    post:
+      operationId: car_create
+      tags:
+        - "car"
+      summary: "Создание автомобиля"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            $ref: '#/definitions/CarSwagger'
+      responses:
+        201:
+          description: "Автомобиль успешно создан"
+        304:
+          description: "Автомобиль не создан: проверьте корректность заполнения полей"
+        500:
+          description: "Ошибка сервера"
+  /car/update/id={id}:
+    post:
+      operationId: car_update
+      tags:
+        - "car"
+      summary: "Изменение автомобиля"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            $ref: '#/definitions/CarSwagger'
+        - name: "id"
+          in: "path"
+          required: true
+          type: "integer"
+          format: "int32"
+      responses:
+        200:
+          description: "Автомобиль успешно изменен"
+        304:
+          description: "Автомобиль не изменен"
+        500:
+          description: "Ошибка сервера"
+  /car/getById/id={id}:
+    get:
+      operationId: car_get_by_id
+      tags:
+        - "car"
+      summary: "Получение автомобиля по id"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          type: "integer"
+          format: "int32"
+      responses:
+        200:
+          description: "Найденный автомобиль"
+          schema:
+            $ref: '#/definitions/CarForGettingSwagger'
+        404:
+          description: "Автомобиль не найден"
+        500:
+          description: "Ошибка сервера"
+  /car/getByVin/vin={vin}:
+    get:
+      operationId: car_get_by_vin
+      tags:
+        - "car"
+      summary: "Получение автомобилей по VIN"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "vin"
+          in: "path"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Найденные автомобили"
+          schema:
+            type: "array"
+            items:
+              $ref: '#/definitions/CarForGettingSwagger'
+        404:
+          description: "Автомобили не найдены"
+        500:
+          description: "Ошибка сервера"
+  /car/getByGovNumb/number={number}:
+    get:
+      operationId: car_get_by_gov_number
+      tags:
+        - "car"
+      summary: "Получение автомобилей по госномеру"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "number"
+          in: "path"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Найденные автомобили"
+          schema:
+            type: "array"
+            items:
+              $ref: '#/definitions/CarForGettingSwagger'
+        404:
+          description: "Автомобили не найдены"
+        500:
+          description: "Ошибка сервера"
+  /car/getAll:
+    get:
+      operationId: car_get_all
+      tags:
+        - "car"
+      summary: "Получение всех автомобилей"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "Найденные автомобили"
+          schema:
+            type: "array"
+            items:
+              $ref: '#/definitions/CarForGettingSwagger'
+        404:
+          description: "Автомобили не найдены"
+        500:
+          description: "Ошибка сервера"
+  /car/addToDriver:
+    post:
+      operationId: car_add_to_driver
+      tags:
+        - "car"
+      summary: "Закрепление автомобиля за водителем"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            $ref: '#/definitions/CarToDriverSwagger'
+      responses:
+        200:
+          description: "Автомобиль успешно закреплен за водителем"
+        304:
+          description: "Автомобиль не закреплен за водителем"
+        500:
+          description: "Ошибка сервера"
+  /car/removeFromDriver:
+    post:
+      operationId: car_remove_from_driver
+      tags:
+        - "car"
+      summary: "Открепление автомобиля от водителя"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            $ref: '#/definitions/CarToDriverSwagger'
+      responses:
+        200:
+          description: "Автомобиль успешно откреплен от водителя"
+        304:
+          description: "Автомобиль не откреплен от водителя"
+        500:
+          description: "Ошибка сервера"
+  /detail/create:
+    post:
+      operationId: detail_create
+      tags:
+        - "detail"
+      summary: "Создание детали"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            $ref: '#/definitions/DetailSwagger'
+      responses:
+        201:
+          description: "Деталь успешно создана"
+        304:
+          description: "Деталь не создана: проверьте корректность заполнения полей"
+        500:
+          description: "Ошибка сервера"
+  /detail/update/id={id}:
+    post:
+      operationId: detail_update
+      tags:
+        - "detail"
+      summary: "Изменение детали"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            $ref: '#/definitions/DetailSwagger'
+        - name: "id"
+          in: "path"
+          required: true
+          type: "integer"
+          format: "int32"
+      responses:
+        200:
+          description: "Деталь успешно изменена"
+        304:
+          description: "Деталь не изменена"
+        500:
+          description: "Ошибка сервера"
+  /detail/getById/id={id}:
+    get:
+      operationId: detail_get_by_id
+      tags:
+        - "detail"
+      summary: "Получение детали по id"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          type: "integer"
+          format: "int32"
+      responses:
+        200:
+          description: "Найденная деталь"
+          schema:
+            $ref: '#/definitions/DetailSwagger'
+        404:
+          description: "Деталь не найдена"
+        500:
+          description: "Ошибка сервера"
+  /detail/getBySerialNumb/number={number}:
+    get:
+      operationId: detail_get_by_serial_number
+      tags:
+        - "detail"
+      summary: "Получение деталей по серийному номеру"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "number"
+          in: "path"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Найденные детали"
+          schema:
+            type: "array"
+            items:
+              $ref: '#/definitions/DetailSwagger'
+        404:
+          description: "Детали не найдены"
+        500:
+          description: "Ошибка сервера"
+  /detail/getAll:
+    get:
+      operationId: detail_get_all
+      tags:
+        - "detail"
+      summary: "Получение всех деталей"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "Найденные детали"
+          schema:
+            type: "array"
+            items:
+              $ref: '#/definitions/DetailSwagger'
+        404:
+          description: "Детали не найдены"
+        500:
+          description: "Ошибка сервера"
+  /detail/addToCar:
+    post:
+      operationId: detail_add_to_car
+      tags:
+        - "detail"
+      summary: "Закрепление детали за автомобилем"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            $ref: '#/definitions/DetailToCarSwagger'
+      responses:
+        200:
+          description: "Деталь успешно закреплена за автомобилем"
+        304:
+          description: "Деталь не закреплена за автомобилем"
+        500:
+          description: "Ошибка сервера"
+  /detail/removeFromCar:
+    post:
+      operationId: detail_remove_from_car
+      tags:
+        - "detail"
+      summary: "Открепление детали от автомобиля"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            $ref: '#/definitions/DetailToCarSwagger'
+      responses:
+        200:
+          description: "Деталь успешно откреплена от автомобиля"
+        304:
+          description: "Деталь не откреплена от автомобиля"
+        500:
+          description: "Ошибка сервера"
+definitions:
+  DriverSwagger:
+    type: "object"
+    properties:
+      fullName:
+        description: "ФИО"
+        type: "string"
+      birthDate:
+        description: "Дата рождения"
+        type: "string"
+      passport:
+        description: "Паспортные данные"
+        type: "string"
+      driverLicenseCategory:
+        description: "Категория водительского удостоверения"
+        type: "string"
+      experience:
+        description: "Стаж вождения"
+        type: "integer"
+        format: "int32"
+  DriverForGettingSwagger:
+    type: "object"
+    properties:
+      fullName:
+        description: "ФИО"
+        type: "string"
+      birthDate:
+        description: "Дата рождения"
+        type: "string"
+      passport:
+        description: "Паспортные данные"
+        type: "string"
+      driverLicenseCategory:
+        description: "Категория водительского удостоверения"
+        type: "string"
+      experience:
+        description: "Стаж вождения"
+        type: "integer"
+        format: "int32"
+      balance:
+        description: "Баланс"
+        type: "number"
+        format: "double"
+      currency:
+        description: "Валюта"
+        type: "string"
+      cars:
+        description: "Список автомобилей"
+        type: "array"
+        items:
+          $ref: '#/definitions/CarsSwagger'
+  CarForGettingSwagger:
+    type: "object"
+    properties:
+      vin:
+        description: "VIN"
+        type: "string"
+      govNumber:
+        description: "Госномер"
+        type: "string"
+      brand:
+        description: "Марка"
+        type: "string"
+      releaseYear:
+        description: "Год выпуска"
+        type: "integer"
+        format: "int32"
+      details:
+        description: "Список деталей"
+        type: "array"
+        items:
+          $ref: '#/definitions/DetailsSwagger'
+  CarSwagger:
+    type: "object"
+    properties:
+      vin:
+        description: "VIN"
+        type: "string"
+      govNumber:
+        description: "Госномер"
+        type: "string"
+      brand:
+        description: "Марка"
+        type: "string"
+      releaseYear:
+        description: "Год выпуска"
+        type: "integer"
+        format: "int32"
+  DetailSwagger:
+    type: "object"
+    properties:
+      detailCategory:
+        description: "Категория деталей"
+        type: "string"
+      serialNumber:
+        description: "Серийный номер"
+        type: "string"
+  CarToDriverSwagger:
+    type: "object"
+    properties:
+      driverId:
+        description: "ID водителя"
+        type: "integer"
+        format: "int32"
+      carId:
+        description: "ID автомобиля"
+        type: "integer"
+        format: "int32"
+  DetailToCarSwagger:
+    type: "object"
+    properties:
+      carId:
+        description: "ID автомобиля"
+        type: "integer"
+        format: "int32"
+      detailId:
+        description: "ID детали"
+        type: "integer"
+        format: "int32"
+  BalanceToDriverSwagger:
+    type: "object"
+    properties:
+      driverId:
+        description: "ID водителя"
+        type: "integer"
+        format: "int32"
+      balance:
+        description: "Баланс для начисления/списания"
+        type: "number"
+        format: "double"
+      currencyId:
+        description: "ID валюты"
+        type: "integer"
+        format: "int32"
+  CarsSwagger:
+    type: "object"
+    properties:
+      govNumber:
+        description: "Госномер"
+        type: "string"
+      brand:
+        description: "Марка"
+        type: "string"
+  DetailsSwagger:
+    type: "object"
+    properties:
+      serialNumber:
+        description: "Серийный номер"
+        type: "string"
+      detailCategory:
+        description: "Категория детали"
+        type: "string"
+  BalanceSwagger:
+    type: "object"
+    properties:
+      fullName:
+        description: "ФИО водителя"
+        type: "string"
+      balance:
+        description: "Баланс"
+        type: "number"
+        format: "double"
+      originalCurrency:
+        description: "Первоначальная валюта"
+        type: "string"
